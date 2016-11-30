@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>dream</h3>
+{% for dream in dream_list %}
+	<a href="/dreamview/?id={{dream.id}}">{{dream.short_description}}</a>
+	<div>{{dream.modify_time}}</div>
+	<br><br>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html'%}
+{% load ran_img %}
+{% block title%} 首页 {% endblock %}
+
+ {% block bgimg %}
+<div class="page-container">
+
+             <img src="media/photos/{% random %}" alt="First slide" class="img-responsive center-block">
+  
+</div>
+{% endblock %}

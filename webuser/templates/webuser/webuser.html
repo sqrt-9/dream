@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+	<div>
+		<div>
+					<img src="/media/{{headimg}}">
+			{{user.username}} &nbsp;{{user.email}}
+		</div>
+	</div>
+	<div>
+
+		{% ifnotequal request.user user%}
+
+
+			<div>
+				<a href="">发送私信</a>
+			</div>
+		
+			<div>
+				<ul>
+					<li><a href="/writedreamlist/?user_id={{user.id}}">他的dream</a></li>
+					<li><a href="/collectdreamlist/?user_id={{user.id}}">他的收藏</a></li>
+				</ul>
+			</div>
+		{% endifnotequal %}
+		
+		
+             {% ifequal request.user user %}
+             	<div>
+             	<ul>
+             	<li>个人设置
+             	<ul>
+             		<li><a href="/chpwd">修改密码</a></li>
+             		<li><a href="/chemail">修改邮箱</a></li>
+             		<li><a href="/uploadheadimg">修改头像</a></li>
+             	</ul>
+             	</li>
+             	<li><a href="/writedreamlist/?user_id={{user.id}}">你的dream</a></li>
+				
+			<li><a href="/collectdreamlist/?user_id={{user.id}}">你的收藏</a></li>	
+				
+				
+             	</ul>
+				
+				
+			</div>
+			
+			{% else %}
+				
+             {% endifequal %}
+		
+		
+		
+	</div>
+	<div>
+		<div><strong>最新动态</strong></div>
+		<br>
+		<div>
+			{% for action in action_list %}
+			{% ifequal action.action 1 %}
+			<div>新dream:</div>
+			<div><a href="/dreamview/?id={{action.dream.id}}">{{action.dream.short_description}}</a></div>
+			<div>{{action.action_time}}</div>
+			<br>
+			<br>
+			{% else %}
+			<div>新comment:</div>
+			<div><a href="/dreamview/?id={{action.dream.id}}">dream:{{action.dream.short_description}}<br>comment:{{action.comment.content}}</a></div>
+			<div>{{action.action_time}}</div>
+			<br>
+			<br>
+			{% endifequal %}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}

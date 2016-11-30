@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+{% load staticfiles %}
+
+{% block head %}
+ <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+ <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+ <METAH TTP-EQUIV="Expires" CONTENT="0">
+ <script src="{% static 'js/comment.js' %}"></script>
+ <script src="{% static 'js/ajax.js' %}"></script>
+ <script type="text/javascript">
+ $(document).ready(function(){
+ 	$('.answer').hide();
+ 	$('#ul li').mouseover(function(){
+ 		$(this).children('a').show();
+ 		$(this).children('a').addClass('active');
+ 	});
+ 	$('#ul li').mouseout(function(){
+ 		$(this).children('a').hide();
+ 		$(this).children('a').removeClass('active');
+ 	})
+ });
+ var commentid=0
+ function showinput(comment_id){
+ 	comment_user_username = $('.active').prev().prev().children('#owner').val()
+ 	commentid = comment_id;
+ 	var msg="<div class='inputtext'>"+"<input id='answer' type='text'>"+"<a id='close' href='javascript:removeinput()'>close</a>"+ "&nbsp;&nbsp;"+"<a id='ok' href='javascript:submit()'>ok</a>"+"</div>";
+ 	$('.active').after(msg);
+ }
+
+ function removeinput(){
+ 	$('.inputtext').remove();
+ }
+
+ function submit(){
+ 	var p_comment_id=commentid;
+ 	var dream_id = $.getUrlParam('id')
+ 	var content=$('#answer').val();
+ 	var comment_user_username = $('.inputtext').prev().prev().children("a").text()
+ 	$.ajax({
+ 			type:'post',
+ 			dataType:'json',
+ 			url:'/comment/',
+ 			data:{'content':content,'dream_id':dream_id,'parent_comment_id':p_comment_id},
+ 			success:function(data,comment_user_username){
+ 				/*
+ 				removeinput();
+ 				$("#user_content")[0].reset();
+ 				var msg="<li class=''"+"<div>你 回复"+comment_user_username+"</div>"+"<div class=''">+"<p>"+data.content+"</p"+"</div>"+"<div class='time'>回复时间：刚刚</div>"+"</li>";
+ 				$(".con").append(msg);
+				*/
+				window.location.reload();
+ 			}
+ 		});
+ 		
+ 	}
+
+ (function ($) {
+ 	$.getUrlParam=function(name){
+ 		var reg=new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+ 		var r=window.location.search.substr(1).match(reg);
+ 		if(r!=null)
+ 			return unescape(r[2]);
+ 		return null;
+ 	}
+ })(jQuery);
+
+ function modify(){
+ 	var short_description = $('h3').text();
+ 	var content = $('#detail').text();
+ 	$('h3').remove();$('#detail').remove();
+ 	$('#dream_content').prepend("<div>"+"<textarea id='detail' cols='40' rows='10'>"+content+"</textarea>"+"</div>");
+ 	$('#dream_content').prepend("<div id='head'><input type='text' id='head3' ></div>");
+ 	$('#head3').val(short_description);
+ 	$('#button').children().remove();
+ 	$('#button').append("<a id='cancel' href=''>取消</a>"+"<a id='modify_ok' href='javascript:modify_submit()'>确定</a>");
+ }
+
+
+ function modify_submit(){
+ 	var short_description = $('#head3').val();
+ 	var content = $('#detail').val();
+ 	var dream_id = $.getUrlParam('id')
+ 	$.post('/modifydream/',{'dream_id':dream_id,'short_description':short_description,'content':content},function(){
+ 		window.location.assign('/dreamview/?id='+dream_id)
+ 	})
+ }
+
+function collect(){
+	var dream_id = $.getUrlParam('id');
+	$.post('/collect/',{'dream_id':dream_id},function(){
+		$('.collect').attr('href','javascript:uncollect()');
+		$('.collect').text('取消收藏');
+		$('.collect').attr('class','uncollect');
+	})
+}
+
+function uncollect(){
+	var dream_id = $.getUrlParam('id')
+	$.post('/uncollect/',{'dream_id':dream_id},function(){
+		$('.uncollect').attr('href','javascript:collect()');
+		$('.uncollect').text('收藏');
+		$('.uncollect').attr('class','collect');
+	})
+}
+ </script>
+
+
+ {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div id='dream_content'>
+        <h3>{{dream.short_description}}</h3>
+        <div id='detail'>{{dream.content}}</div>
+        <div><a href="/webuser/?id={{dream.user.id}}">{{dream.user.username}}</a></div>
+        {{dream.publish_time}}
+        {% if request.user.is_authenticated %}
+        {% if flag %}
+        <a class="uncollect" href="javascript:uncollect()">取消收藏</a>
+        {% else %}
+        <a class="collect" href="javascript:collect()">收藏</a>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% ifequal dream.user request.user %}
+    <div id='button'>
+        <a id='modify' href="javascript:modify()">修改</a>
+        <a id='delete' href="/deletedream?id={{dream.id}}">删除</a>
+	</div>
+	{% else %}
+	{% endifequal %}
+	<div>
+	<ul class="con" id="ul">
+		{% for comment in commentlist %}
+		{% if comment.parent_comment %}
+		<li>
+		<div>{{comment.content}}</div>
+		<div><a href="/webuser/?id={{comment.usesr.id}}" class="owner">{{comment.user.username}}</a>回复<a href="/webuser/?id={{comment.parent_comment.user.id}}">{{comment.parent_comment.user.username}}</a>
+		</div>
+		{{comment.publish_time}}
+		<a class='answer' href='javascript:showinput({{comment.id}})'>回复</a>
+		</li>
+		{% else %}
+		<li>
+		<div>{{comment.content}}</div>
+		<div><a  class='owner' href="/webuser/?id={{comment.user.id}}">{{comment.user.username}}</a></div>
+		{{comment.publish_time}}
+		<a class='answer' href='javascript:showinput({{comment.id}})'>回复</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+	</ul>
+		<form  method = 'post' enctype="multipart/form-data"  id="user_content">
+			{{form.as_p}}
+			<input type="submit" name="" value="评论">
+		</form>
+	</div>
+</div>
+
+{% endblock %}

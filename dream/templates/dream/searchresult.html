@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content">
+    {% for dream in dreamlist %}
+    <div class="dream-box">
+    	<a href="/dream?id={{dream.id}}" class="dream-short-description">{{dream.short_description}}</a>
+    	{{dream.user.username}}
+    	{{dream.publish_time}}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

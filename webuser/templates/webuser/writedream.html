@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class ask-form>
+    <form method = 'post' enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+    	    {{form.as_p}}
+    	    {{errors}}
+    	    <br/>
+    	    <input type="submit" value="提交">
+    	</div>
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+.base-head{
+	background-color:#ffcc22;
+}
+.base-dream{
+	position:absolute;
+	left:15px;
+	font-size: 25px;
+	height: 50px;
+	line-height: 20px;
+	padding: 15px
+}
+.base-navigation{
+	float:right;
+	position:absolute;
+	left:175px;
+	top:16px;
+}
+
+ask{
+	position:absolute;
+	left:50px;
+}
+
+.base.search{
+	float:right;
+	width:300px
+}
+

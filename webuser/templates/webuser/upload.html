@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="/uploadheadimg/" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	{% for field in form.visible_fields %}
+	<div>{{field}}</div>
+	{% endfor %}
+	<button id="photo" class="btn btn-danger" type="submit">上传头像</button>
+</form>
+{% endblock %}
+

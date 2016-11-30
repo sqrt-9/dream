@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}dream{% endblock %}
+{% block head %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+    
+      
+    <div class="col-md-8 main-listing">
+    {% for dream in dreamlist %}
+    <article> 
+    <div>
+     <img src="/media/{{dream.headimg}}"> 
+   
+    	    <p class="post-title">
+            <a href="/dreamview/?id={{dream.id}}" class="">{{dream.short_description}}</a>
+            </p>
+            <div class="post-meta clearfix">
+            <span class="date">{{dream.publish_time}}</span>
+            <span>评论数:{{dream.comment_num}}</span>           
+            </div>
+    </div>
+        
+	
+	    <a href="/webuser/?id={{dream.user.id}}">{{dream.user.username}}</a>
+	
+    </article>
+    <br/>
+    <br/>
+    <br/>
+    {% endfor %}
+
+
+    <div>
+    	{% ifnotequal page 1 %}
+     <a href="/pageup/?page={{page}}">上一页</a>
+     {% endifnotequal %}
+     第{{page}}/{{allpage}}页
+     {% ifnotequal page allpage %}
+     <a href="/pagedown/?page={{page}}">下一页</a>
+     {% endifnotequal %}
+     </div>
+     </div>
+     <div class="col-md-4">
+         <div id='date' ></div>
+<script language="javascript">
+function getdates()
+{
+var w_array=new Array("星期天","星期一","星期二","星期三","星期四","星期五","星期六");
+var d=new Date();
+var year=d.getFullYear();
+var month=d.getMonth()+1;
+var day=d.getDate();
+var week=d.getDay();
+var h=d.getHours();
+var mins=d.getMinutes();
+var s=d.getSeconds();
+
+if(month<10) month="0" + month
+if(day<10) month="0" + day
+if(h<10) h="0" + h
+if(mins<10) mins="0" + mins
+if(s<10) s="0" + s
+
+var shows="现在时间是： <span>" + year + "-" + month + "-" + day + " " + h + ":" + mins + ":" + s + " " + w_array[week] + "</span>";
+document.getElementById("date").innerHTML=shows;
+setTimeout("getdates()",1000);
+}
+getdates();
+</script>
+     </div>
+     <div>
+     <ul>
+         <li> 在线人数:{{online_ips_count}}</li>
+         <li> 注册用户:{{register_num}}</li>
+     </ul>
+        
+     </div>
+     </div>
+
+
+{% endblock %}

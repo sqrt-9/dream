@@ -1,0 +1,29 @@
+
+
+model Dream   model DreamComment
+DreamComment.foreigkey webuser Dream
+一个页面显示dream的comment
+commentlist 我的方法是comment.dream_id = dream.id
+反过来从dream.id 查找该dream的所有comment 
+
+
+
+
+
+
+在js中传入django的参数{{}}
+
+通用类试图
+
+djcelery
+
+
+signals 细化到数据新建，修改  pre_save
+
+select_related()prefetch_related()
+
+login_required()不能跳转到登录页
+
+建数据库时CREATE DATABASE `test`  
+CHARACTER SET 'utf8'  
+COLLATE 'utf8_general_ci'; 

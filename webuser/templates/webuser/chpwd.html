@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+修改密码
+<div>
+	<form  method = 'post' enctype="multipart/form-data" action="/chpwd/">
+		{% csrf_token %}
+		{{form.as_p}}
+		<input type="submit" name="" value=" 确认修改">
+	</form>
+</div>
+{% endblock %}
